@@ -1,0 +1,23 @@
+solace:
+  java:
+    host: tcp://127.0.0.1
+    msgVpn: msgvpn
+    clientUsername: solace-cloud-client
+    clientPassword: password
+    connectRetries: 1
+    reconnectRetries: 5
+    connectRetriesPerHost: 20 
+    reconnectRetryWaitInMillis: 3000
+    
+twitter:
+  consumerKey: myconsumerkey
+  consumerSecret: mysecretkey
+  token: mytoken
+  secret: secret
+
+solacestream:
+  topic: solace/twitter/stream
+  trackTerms:
+    - twitter
+    - api
+  
