@@ -1,0 +1,22 @@
+language: java
+jdk:
+- oraclejdk8
+install: true
+before_cache:
+- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
+script:
+- "./gradlew clean fatJarZip"
+deploy:
+  provider: releases
+  api_key:
+    secure: iH8+Cxtkvad5M9K0JqP0RtqhjcHIECQBX8/RUqMNsbj1sIhxf/SIm0KM1oJXTEDG0QuWDB2FtUvIDklItj1Tpi+Aj3Z6VvRPNxMOCQ0HC6o3y1jhgUhHIZ2IL+TLaFCTqz042ha/YkPpd8E74j11qj2DBOk0Gn7smJLxc9niUdyHQAGtMZYsQIbtoAIXtn6JqLGbvi2nR/t70hK/Jybo81JlaPOd0vaxOGFnYjiCpbqTJqcdZWuNXu3eRmxN9p8cwgcNzZxgTtOVcv93xlQZYiGwTOx/hw6Mt50C4nKdUTxWzMDBIWvilRweyL7+MzUNTVf3Vk4LEG5MSr3frBLKOuYRl2F+qwNoC6EEN1t8wa7WaEma91i95J2hYmb/dbCd8kUg8C8oYAdGtUUNnxXIyZUcqjwa9KksFEWAOqqyK2vaEbT1pwJDUC7Y4bGncuXO+Fjjd3pTmG7S+YfypDFgHG7JzRnkgD+d3Yni5lyLOqiWKB1pDKnXchX6CdzC5dAq5QihIH6JP95maW8TjzdBN7S0rHyQvL0IZO3FCU68XqYgq5eHs/+CAQB5YsFejhV6KEVgqcCnE0nz41jiLA6U0hqOlo2vnyWD9aGVjUiGUE9/eOkIIwj4+7UsD6hck0bik5HXDdd+CfW5lZkIS83551ps9RbWPcZckhJFufyOQd4=
+  file_glob: true
+  file: "build/distributions/*.zip"
+  skip_cleanup: true
+  on:
+    tags: true

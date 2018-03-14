@@ -12,6 +12,7 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'distribution'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
@@ -37,8 +38,8 @@ def distributionsCopySpec = copySpec {
     }
 }
 
-task fatJarZip(type: Zip, dependsOn: 'bootRepackage') { with distributionsCopySpec }
-task fatJarTar(type: Tar, dependsOn: 'bootRepackage') { with distributionsCopySpec }
+task fatJarZip(type: Zip, dependsOn: 'bootJar') { with distributionsCopySpec }
+task fatJarTar(type: Tar, dependsOn: 'bootJar') { with distributionsCopySpec }
 
 repositories {
 	mavenCentral()
