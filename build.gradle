@@ -1,0 +1,60 @@
+buildscript {
+	ext {
+		springBootVersion = '2.0.0.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.solace.demo.twitter'
+version = '0.1.0'
+sourceCompatibility = 1.8
+
+jar {
+    baseName = 'solace-twitter-stream-bin'
+    version =  version
+}
+
+def distributionsCopySpec = copySpec {
+    into("$name-$version") {
+        from(libsDir) {
+            include '*.jar' //copy the fat jar created by bootRepackage
+        }
+        from 'README.md'
+        from 'LICENSE'
+        into('config') {
+            from 'config'
+        }
+    }
+}
+
+task fatJarZip(type: Zip, dependsOn: 'bootRepackage') { with distributionsCopySpec }
+task fatJarTar(type: Tar, dependsOn: 'bootRepackage') { with distributionsCopySpec }
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	// Solace Java API & auto-configuration
+	compile("com.solace.spring.boot:solace-java-spring-boot-starter:1.+")
+	
+	// Twitter Streaming API
+	compile('com.twitter:hbc-core:2.2.0')
+	
+	// For Ops
+	compile('org.springframework.boot:spring-boot-starter-actuator')
+	compile('org.springframework.boot:spring-boot-configuration-processor')
+	
+	// For Test
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+}
