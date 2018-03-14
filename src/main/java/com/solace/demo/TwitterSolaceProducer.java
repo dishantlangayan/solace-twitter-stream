@@ -94,7 +94,7 @@ public class TwitterSolaceProducer {
                 // Publish the msg
                 producer.send(solaceMsg, topic);
                 
-                logger.info("Msg sent: " + twitterMsg);
+                logger.debug("Msg sent: " + twitterMsg);
             }
 
         } catch (JCSMPException e) {

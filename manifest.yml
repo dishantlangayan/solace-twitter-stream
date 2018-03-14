@@ -1,0 +1,6 @@
+applications:
+- name: solace-twitter-stream
+  memory: 1G
+  path: build/libs/solace-twitter-stream-0.1.0.jar
+services:
+  - team3-twitter-streaming
