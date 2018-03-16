@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 Dishant Langayan
+ * Copyright 2018 Dishant Langayan
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import javax.annotation.PreDestroy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.solacesystems.jcsmp.JCSMPException;
 import com.solacesystems.jcsmp.JCSMPFactory;
@@ -44,7 +44,7 @@ import com.twitter.hbc.core.processor.StringDelimitedProcessor;
 import com.twitter.hbc.httpclient.auth.Authentication;
 import com.twitter.hbc.httpclient.auth.OAuth1;
 
-@Component
+@Service
 public class TwitterSolaceProducer {
     private static final Logger logger = LoggerFactory.getLogger(TwitterSolaceProducer.class);
 
@@ -80,22 +80,7 @@ public class TwitterSolaceProducer {
             // Connect HBC
             hosebirdClient.connect();
 
-            logger.info("Solace Twitter Streaming has started");
-
-            while (!hosebirdClient.isDone()) {
-                String twitterMsg = msgQueue.take();
-
-                // Reset the Solace msg as we are reusing it
-                solaceMsg.reset();
-
-                // Set payload
-                solaceMsg.setText(twitterMsg);
-
-                // Publish the msg
-                producer.send(solaceMsg, topic);
-                
-                logger.debug("Msg sent: " + twitterMsg);
-            }
+            logger.info("Solace Twitter Streaming is now connected");
 
         } catch (JCSMPException e) {
             logger.error("Error while setting up Solace PubSub", e);
@@ -117,6 +102,30 @@ public class TwitterSolaceProducer {
             session.closeSession();
         }
         logger.info("Solace Twitter Streaming has stopped");
+    }
+
+    /**
+     * Takes twitter stream msg from the msg queue and publishes it as a Solace
+     * message to Solace PubSub+.
+     * 
+     * @throws Exception
+     */
+    public void publishStream() throws Exception {
+        logger.info("Publishing stream to Solace...");
+        while (!hosebirdClient.isDone()) {
+            String twitterMsg = msgQueue.take();
+
+            // Reset the Solace msg as we are reusing it
+            solaceMsg.reset();
+
+            // Set payload
+            solaceMsg.setText(twitterMsg);
+
+            // Publish the msg
+            producer.send(solaceMsg, topic);
+
+            logger.debug("Msg sent: " + twitterMsg);
+        }
     }
 
     private void setupSolacePubSub() throws JCSMPException {
@@ -146,9 +155,9 @@ public class TwitterSolaceProducer {
         Hosts hosebirdHosts = new HttpHosts(Constants.STREAM_HOST);
         StatusesFilterEndpoint hosebirdEndpoint = new StatusesFilterEndpoint();
         // Optional: set up some followings and track terms
-        //List<Long> followings = Lists.newArrayList(1234L, 566788L);
-        List<String> terms = appProperties.getTrackTerms(); //Lists.newArrayList("twitter", "api");
-        //hosebirdEndpoint.followings(followings);
+        // List<Long> followings = Lists.newArrayList(1234L, 566788L);
+        List<String> terms = appProperties.getTrackTerms(); // Lists.newArrayList("twitter", "api");
+        // hosebirdEndpoint.followings(followings);
         hosebirdEndpoint.trackTerms(terms);
 
         // These secrets should be read from a config file
