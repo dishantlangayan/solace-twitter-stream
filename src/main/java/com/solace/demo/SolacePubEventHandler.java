@@ -1,5 +1,5 @@
 /**
- * Copyright 2017 Dishant Langayan
+ * Copyright 2018 Dishant Langayan
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,5 +38,4 @@ public class SolacePubEventHandler implements JCSMPStreamingPublishEventHandler 
     public void handleError(String messageID, JCSMPException e, long timestamp) {
         logger.info("Producer received error for msg: %s@%s - %s%n", messageID, timestamp, e);
     }
-
 }
