@@ -1,6 +1,6 @@
 ![alt text](https://travis-ci.org/dishantlangayan/solace-twitter-stream.svg?branch=master "Build Status")
 
-# Streaming Twitter Data using Solace PubSub+
+# Streaming Twitter Data using Solace PubSub Messaging
 
 ## Overview
 
@@ -11,7 +11,7 @@ messaging.
 
 The application is built using the Spring Boot Actuactor starter project, and
 use Solace's [Spring Boot Auto-Configuration for the Solace Java API](https://github.com/SolaceProducts/solace-java-spring-boot) 
-to publish the Twitter stream to Solace PubSub+.
+to publish the Twitter stream to Solace PubSub.
 
 You can also filter for specific terms in the Twitter stream.
 
